@@ -1,6 +1,0 @@
-@test_finix_HostAddress = http://localhost:5171
-
-GET {{test_finix_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
