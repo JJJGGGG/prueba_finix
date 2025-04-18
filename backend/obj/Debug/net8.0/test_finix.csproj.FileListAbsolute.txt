@@ -7,7 +7,6 @@
 /home/julian/Desktop/Entrevistas/Finix/test_finix/backend/obj/Debug/net8.0/test_finix.MvcApplicationPartsAssemblyInfo.cache
 /home/julian/Desktop/Entrevistas/Finix/test_finix/backend/bin/Debug/net8.0/appsettings.Development.json
 /home/julian/Desktop/Entrevistas/Finix/test_finix/backend/bin/Debug/net8.0/appsettings.json
-/home/julian/Desktop/Entrevistas/Finix/test_finix/backend/bin/Debug/net8.0/bd_exam.json
 /home/julian/Desktop/Entrevistas/Finix/test_finix/backend/bin/Debug/net8.0/test_finix
 /home/julian/Desktop/Entrevistas/Finix/test_finix/backend/bin/Debug/net8.0/test_finix.deps.json
 /home/julian/Desktop/Entrevistas/Finix/test_finix/backend/bin/Debug/net8.0/test_finix.runtimeconfig.json

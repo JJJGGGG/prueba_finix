@@ -41,10 +41,7 @@ namespace test_finix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("customerId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("customer_run")
+                    b.Property<string>("customerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -53,9 +50,6 @@ namespace test_finix.Migrations
 
                     b.Property<DateTime>("invoice_date")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("invoice_detailId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("invoice_status")
                         .IsRequired()
@@ -73,7 +67,7 @@ namespace test_finix.Migrations
 
                     b.HasKey("invoice_number");
 
-                    b.HasIndex("customer_run");
+                    b.HasIndex("customerId");
 
                     b.ToTable("invoices");
                 });
@@ -156,7 +150,7 @@ namespace test_finix.Migrations
                 {
                     b.HasOne("test_finix.Models.Customer", "customer")
                         .WithMany("invoices")
-                        .HasForeignKey("customer_run")
+                        .HasForeignKey("customerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -36,16 +36,14 @@ namespace test_finix.Migrations
                     days_to_due = table.Column<int>(type: "INTEGER", nullable: false),
                     payment_due_date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     payment_status = table.Column<string>(type: "TEXT", nullable: false),
-                    invoice_detailId = table.Column<int>(type: "INTEGER", nullable: false),
-                    customer_run = table.Column<string>(type: "TEXT", nullable: false),
-                    customerId = table.Column<int>(type: "INTEGER", nullable: false)
+                    customerId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_invoices", x => x.invoice_number);
                     table.ForeignKey(
-                        name: "FK_invoices_customers_customer_run",
-                        column: x => x.customer_run,
+                        name: "FK_invoices_customers_customerId",
+                        column: x => x.customerId,
                         principalTable: "customers",
                         principalColumn: "customer_run",
                         onDelete: ReferentialAction.Cascade);
@@ -128,9 +126,9 @@ namespace test_finix.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_invoices_customer_run",
+                name: "IX_invoices_customerId",
                 table: "invoices",
-                column: "customer_run");
+                column: "customerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_product_details_invoiceId",
