@@ -11,7 +11,7 @@ class DatabaseManager:
         self.con = sqlite3.connect(self.dbpath)
         self.cur = self.con.cursor()
         return self
-    
+
     def __exit__(self, type, value, traceback):
         self.con.commit()
         self.con.close()

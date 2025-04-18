@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import logging
 
@@ -12,13 +13,18 @@ class DataLoader:
         self.payments = []
         self.load_data()
 
-    def verify_total_amount(self, details, total_amount):
+    def get_invoice_total(self, details):
         total = sum(map(lambda detail: detail["subtotal"], details))
+        return total
 
+    def verify_total_amount(self, total, total_amount):
         return total == total_amount
 
-    def verify_credit_notes(self, ncs, total_amount):
+    def get_cn_total(self, ncs):
         total = sum(map(lambda nc: nc["credit_note_amount"], ncs))
+        return total
+
+    def verify_credit_notes(self, total, total_amount):
 
         return total <= total_amount
 
@@ -48,6 +54,20 @@ class DataLoader:
             "invoiceId": inv["invoice_number"]
         }
 
+    def get_invoice_status(self, nc_total, total_amount, nc_amount):
+        if nc_amount == 0:
+            return "issued"
+        elif nc_total == total_amount:
+            return "cancelled"
+        return "partial"
+
+    def get_payment_status(self, payment_date, payment_due_date):
+        if payment_date is not None:
+            return "Paid"
+        elif datetime.now().strftime("%Y-%m-%d") > payment_due_date:
+            return "Overdue"
+        return "Pending"
+
     def build_customers(self):
         customers = dict()
         for invoice in self.data["invoices"]:
@@ -60,49 +80,66 @@ class DataLoader:
 
         self.customers = list(customers.values())
 
+    def build_invoice(self, inv):
+        invoice = {
+            "customerId": inv["customer"]["customer_run"],
+            "invoice_number": inv["invoice_number"],
+            "invoice_date": inv["invoice_date"],
+            "invoice_status": inv["invoice_status"],
+            "total_amount": inv["total_amount"],
+            "days_to_due": inv["days_to_due"],
+            "payment_due_date": inv["payment_due_date"],
+            "payment_status": inv["payment_status"],
+        }
+        invoice_details = self.get_invoice_details(inv)
+
+        invoice_total = self.get_invoice_total(invoice_details)
+
+        if not self.verify_total_amount(
+                invoice_total,
+                invoice["total_amount"]):
+            logging.error(
+                f"Factura {invoice['invoice_number']} fue descartada"
+                " por inconsistencia entre subtotales y total_amount"
+            )
+            return  # No agregamos esta factura
+
+        credit_notes = self.get_invoice_credit_notes(inv)
+
+        credit_total = self.get_cn_total(credit_notes)
+
+        if not self.verify_credit_notes(
+                credit_total,
+                invoice["total_amount"]):
+            logging.error(
+                f"Factura {invoice['invoice_number']} fue descartada"
+                " por inconsistencia entre notas de credito y total_amount"
+            )
+            return  # No agregamos esta factura
+
+        payment = self.get_invoice_payments(inv)
+
+        invoice["invoice_status"] = self.get_invoice_status(
+            credit_total,
+            invoice["total_amount"],
+            len(credit_notes))
+
+        invoice["payment_status"] = self.get_payment_status(
+            payment["payment_date"],
+            invoice["payment_due_date"])
+
+        logging.info(
+            f"Validados datos para factura {invoice['invoice_number']}!"
+        )
+
+        self.invoices.append(invoice)
+        self.inv_details.extend(invoice_details)
+        self.credit_notes.extend(credit_notes)
+        self.payments.append(payment)
+
     def build_invoices(self):
         for inv in self.data["invoices"]:
-            invoice = {
-                "customerId": inv["customer"]["customer_run"],
-                "invoice_number": inv["invoice_number"],
-                "invoice_date": inv["invoice_date"],
-                "invoice_status": inv["invoice_status"],
-                "total_amount": inv["total_amount"],
-                "days_to_due": inv["days_to_due"],
-                "payment_due_date": inv["payment_due_date"],
-                "payment_status": inv["payment_status"],
-            }
-            invoice_details = self.get_invoice_details(inv)
-
-            if not self.verify_total_amount(
-                    invoice_details,
-                    invoice["total_amount"]):
-                logging.error(
-                    f"Factura {invoice['invoice_number']} fue descartada"
-                    " por inconsistencia entre subtotales y total_amount"
-                )
-                continue  # No agregamos esta factura
-
-            credit_notes = self.get_invoice_credit_notes(inv)
-
-            if not self.verify_credit_notes(
-                    credit_notes,
-                    invoice["total_amount"]):
-                logging.error(
-                    f"Factura {invoice['invoice_number']} fue descartada"
-                    " por inconsistencia entre notas de credito y total_amount"
-                )
-                continue  # No agregamos esta factura
-            payment = self.get_invoice_payments(inv)
-
-            logging.info(
-                f"Validados datos para factura {invoice['invoice_number']}!"
-            )
-
-            self.invoices.append(invoice)
-            self.inv_details.extend(invoice_details)
-            self.credit_notes.extend(credit_notes)
-            self.payments.append(payment)
+            self.build_invoice(inv)
 
     def build(self):
         self.build_customers()
