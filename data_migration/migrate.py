@@ -16,7 +16,7 @@ def main():
     data = loader.get_data()
 
     with DatabaseManager(DATABASE_PATH) as dm:
-        dm.drop_values()
+        # dm.drop_values()
         dm.save_customers(data["customers"])
         dm.save_invoices(data["invoices"])
         dm.save_details(data["details"])
