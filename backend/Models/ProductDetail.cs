@@ -13,5 +13,5 @@ public class ProductDetail
     public int quantity { get; set; }
     public int subtotal { get; set; }
     public int invoiceId { get; set; }
-    public required Invoice invoice { get; set; }
+    //public Invoice invoice { get; set; }
 }

@@ -63,10 +63,10 @@ class DataLoader:
 
     def get_payment_status(self, payment_date, payment_due_date):
         if payment_date is not None:
-            return "Paid"
+            return "paid"
         elif datetime.now().strftime("%Y-%m-%d") > payment_due_date:
-            return "Overdue"
-        return "Pending"
+            return "overdue"
+        return "pending"
 
     def build_customers(self):
         customers = dict()

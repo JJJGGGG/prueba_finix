@@ -10,5 +10,5 @@ public class InvoicePayment
     public string? payment_method { get; set; }
     public DateTime? payment_date { get; set; }
     public int invoiceId { get; set; }
-    public required Invoice invoice { get; set; }
+    //public Invoice invoice { get; set; }
 }

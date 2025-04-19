@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  @apply bg-white text-black;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+body {
+  @apply mb-8
+}
+
+.app-padding {
+  @apply px-32
+}
+
+a.nav-link {
+  @apply text-xl
+}
+
+a.nav-link:hover {
+  @apply border-b-2 border-green-400
+}
+
+a.nav-link.active {
+  @apply border-b-2 border-green-400
+}
+
+a.default-link, button.default-link {
+  @apply cursor-pointer
+}
+a.default-link:hover, button.default-link:hover {
+  @apply underline
+}
+
+input.input {
+  @apply border border-gray-500 rounded px-2
+}

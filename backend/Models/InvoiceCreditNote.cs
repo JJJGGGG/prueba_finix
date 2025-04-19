@@ -10,5 +10,5 @@ public class InvoiceCreditNote
     public DateTime credit_note_date { get; set; }
     public int credit_note_amount { get; set; }
     public int invoiceId { get; set; }
-    public required Invoice invoice { get; set; }
+    //public Invoice invoice { get; set; }
 }
