@@ -57,6 +57,9 @@ dotnet run
 ## Swagger
 La documentación de los endpoints está disponible en estilo swagger. Para eso, correr el código y navegar a la [siguiente url](http://localhost:5171/swagger/index.html)
 
+## Autenticación
+Por motivos de tiempo, no se alcanzó a implementar este punto.
+
 # Frontend
 
 ## Env
